@@ -254,6 +254,39 @@ h1 {
   gap: 16px;
 }
 
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -4px 0 24px;
+}
+
+.tab-button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.tab-button:hover,
+.tab-button:focus-visible {
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.tab-button.active {
+  background: var(--berry);
+  color: white;
+  box-shadow: 0 10px 22px rgba(239, 124, 142, 0.22);
+}
+
 .step,
 .note,
 .photo-card {
@@ -505,6 +538,11 @@ code {
   .gallery,
   .notes {
     grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .section {
