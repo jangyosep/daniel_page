@@ -40,38 +40,24 @@ const galleryGrid = document.querySelector("#galleryGrid");
 const videoGrid = document.querySelector("#videoGrid");
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabPanels = document.querySelectorAll(".tab-panel");
-const musicButtons = document.querySelectorAll(".music-button[data-track]");
-const stopMusic = document.querySelector("#stopMusic");
 const photoDialog = document.querySelector("#photoDialog");
 const dialogImage = document.querySelector("#dialogImage");
 const dialogTitle = document.querySelector("#dialogTitle");
 const closeDialog = document.querySelector("#closeDialog");
 
-const bgmTracks = [
-  {
-    name: "꿈꾸는 별",
-    tempo: 132,
-    wave: "sine",
-    notes: ["C5", "E5", "G5", "E5", "A5", "G5", "E5", "D5"],
-  },
-  {
-    name: "폭신한 구름",
-    tempo: 104,
-    wave: "triangle",
-    notes: ["G4", "B4", "D5", "G5", "E5", "D5", "B4", "G4"],
-  },
-  {
-    name: "작은 행진",
-    tempo: 148,
-    wave: "square",
-    notes: ["C5", "C5", "G4", "G4", "A4", "A4", "G4", "E5"],
-  },
-];
+const bgmTrack = {
+  name: "꿈꾸는 별",
+  tempo: 132,
+  wave: "sine",
+  notes: ["C5", "E5", "G5", "E5", "A5", "G5", "E5", "D5"],
+};
 
 let audioContext;
 let bgmTimer;
 let activeOscillators = [];
-let activeTrackIndex = null;
+let bgmEnabled = true;
+let bgmRunning = false;
+let bgmPausedForVideo = false;
 
 function updateDayCounter() {
   const today = new Date();
@@ -110,6 +96,14 @@ function createVideoCard(video) {
       <source src="${video.src}" type="video/mp4">
     </video>
   `;
+  const player = item.querySelector("video");
+  player.addEventListener("play", pauseBgmForVideo);
+  player.addEventListener("ended", resumeBgmAfterVideo);
+  player.addEventListener("pause", () => {
+    if (!player.ended) {
+      resumeBgmAfterVideo();
+    }
+  });
   return item;
 }
 
@@ -153,8 +147,7 @@ function stopBgm() {
     }
   });
   activeOscillators = [];
-  activeTrackIndex = null;
-  musicButtons.forEach((button) => button.classList.remove("active"));
+  bgmRunning = false;
 }
 
 function playTone(frequency, startTime, duration, track) {
@@ -177,23 +170,31 @@ function playTone(frequency, startTime, duration, track) {
   activeOscillators.push(oscillator);
 }
 
-function scheduleBgm(trackIndex) {
-  const track = bgmTracks[trackIndex];
-  const beat = 60 / track.tempo;
+function scheduleBgm() {
+  if (!bgmEnabled || bgmPausedForVideo) {
+    return;
+  }
+
+  const beat = 60 / bgmTrack.tempo;
   const startTime = audioContext.currentTime + 0.05;
 
   activeOscillators = [];
-  track.notes.forEach((note, index) => {
+  bgmTrack.notes.forEach((note, index) => {
     const time = startTime + index * beat;
     const frequency = noteToFrequency(note);
-    playTone(frequency, time, beat * 0.86, track);
-    playTone(frequency / 2, time, beat * 0.86, { ...track, wave: "sine" });
+    playTone(frequency, time, beat * 0.86, bgmTrack);
+    playTone(frequency / 2, time, beat * 0.86, { ...bgmTrack, wave: "sine" });
   });
 
-  bgmTimer = window.setTimeout(() => scheduleBgm(trackIndex), track.notes.length * beat * 1000);
+  bgmRunning = true;
+  bgmTimer = window.setTimeout(scheduleBgm, bgmTrack.notes.length * beat * 1000);
 }
 
-async function playBgm(trackIndex) {
+async function startBgm() {
+  if (!bgmEnabled || bgmPausedForVideo || bgmRunning) {
+    return;
+  }
+
   if (!audioContext) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContextClass();
@@ -204,9 +205,27 @@ async function playBgm(trackIndex) {
   }
 
   stopBgm();
-  activeTrackIndex = trackIndex;
-  musicButtons[trackIndex].classList.add("active");
-  scheduleBgm(trackIndex);
+  scheduleBgm();
+}
+
+function pauseBgmForVideo() {
+  bgmPausedForVideo = true;
+  stopBgm();
+}
+
+function resumeBgmAfterVideo() {
+  if (!bgmPausedForVideo) {
+    return;
+  }
+
+  bgmPausedForVideo = false;
+  startBgm();
+}
+
+function enableBgmOnFirstGesture() {
+  startBgm().catch(() => {});
+  window.removeEventListener("pointerdown", enableBgmOnFirstGesture);
+  window.removeEventListener("keydown", enableBgmOnFirstGesture);
 }
 
 tabButtons.forEach((button) => {
@@ -229,25 +248,13 @@ tabButtons.forEach((button) => {
   });
 });
 
-musicButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const trackIndex = Number(button.dataset.track);
-
-    if (activeTrackIndex === trackIndex) {
-      stopBgm();
-      return;
-    }
-
-    playBgm(trackIndex);
-  });
-});
-
-stopMusic.addEventListener("click", stopBgm);
-
 updateDayCounter();
 setRandomHeroImage();
 renderPhotos();
 renderVideos();
+startBgm().catch(() => {});
+window.addEventListener("pointerdown", enableBgmOnFirstGesture);
+window.addEventListener("keydown", enableBgmOnFirstGesture);
 
 closeDialog.addEventListener("click", () => photoDialog.close());
 
