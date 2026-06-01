@@ -289,7 +289,8 @@ h1 {
 
 .step,
 .note,
-.photo-card {
+.photo-card,
+.video-card {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.72);
@@ -334,7 +335,12 @@ code {
   font-size: 0.92em;
 }
 
-.gallery {
+.tab-panel[hidden] {
+  display: none;
+}
+
+.gallery,
+.video-gallery {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
@@ -381,18 +387,17 @@ code {
   font-weight: 700;
 }
 
-.photo-info {
-  padding: 14px 6px 6px;
+.video-card {
+  padding: 10px;
 }
 
-.photo-info h3 {
-  font-size: 1.65rem;
-}
-
-.photo-info p {
-  margin: 6px 0 0;
-  color: var(--muted);
-  line-height: 1.55;
+.video-card video {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  display: block;
+  border-radius: 6px;
+  background: #f4e5d9;
+  object-fit: cover;
 }
 
 .notes {
@@ -431,15 +436,11 @@ code {
 }
 
 .dialog-caption {
-  padding: 18px 22px 24px;
+  padding: 14px 22px 18px;
 }
 
 .dialog-caption h2 {
   font-size: 2.25rem;
-}
-
-.dialog-caption p {
-  color: var(--muted);
 }
 
 .close-button {
@@ -506,7 +507,8 @@ code {
   }
 
   .steps,
-  .gallery {
+  .gallery,
+  .video-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -536,6 +538,7 @@ code {
 
   .steps,
   .gallery,
+  .video-gallery,
   .notes {
     grid-template-columns: 1fr;
   }

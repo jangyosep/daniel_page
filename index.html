@@ -21,7 +21,7 @@
         </a>
         <div class="nav-links">
           <a href="#gallery">사진</a>
-          <a href="#gallery">추천</a>
+          <a href="#media">동영상</a>
         </div>
       </nav>
 
@@ -35,12 +35,12 @@
           </p>
           <div class="hero-actions">
             <a class="primary-button" href="#gallery">사진 보기</a>
-          <a class="ghost-button" href="#gallery">추천 사진 보기</a>
+            <a class="ghost-button" href="#media">동영상 보기</a>
           </div>
         </div>
 
         <figure class="hero-photo">
-          <img src="images/daniel-01.jpg" alt="Daniel의 대표 사진" />
+          <img id="heroImage" src="images/daniel-01.jpg" alt="Daniel의 대표 사진" />
           <figcaption>Today’s favorite moment</figcaption>
         </figure>
       </section>
@@ -49,24 +49,23 @@
     <main>
       <section class="section gallery-section" id="gallery">
         <div class="section-heading">
-          <p class="eyebrow">Gallery</p>
-          <h2>Daniel 사진첩</h2>
+          <p class="eyebrow">Album</p>
+          <h2>Daniel 앨범</h2>
         </div>
-        <div class="tabs" role="tablist" aria-label="사진 분류">
-          <button class="tab-button active" type="button" role="tab" aria-selected="true" data-filter="all">
-            전체 사진
+        <div class="tabs" role="tablist" aria-label="앨범 보기">
+          <button class="tab-button active" type="button" role="tab" aria-selected="true" data-panel="photosPanel">
+            사진
           </button>
-          <button class="tab-button" type="button" role="tab" aria-selected="false" data-filter="favorite">
-            추천 사진
-          </button>
-          <button class="tab-button" type="button" role="tab" aria-selected="false" data-filter="new">
-            새로 추가
-          </button>
-          <button class="tab-button" type="button" role="tab" aria-selected="false" data-filter="cute">
-            귀여운 순간
+          <button class="tab-button" id="media" type="button" role="tab" aria-selected="false" data-panel="videosPanel">
+            동영상
           </button>
         </div>
-        <div class="gallery" id="galleryGrid" aria-live="polite"></div>
+        <div class="tab-panel active" id="photosPanel" role="tabpanel">
+          <div class="gallery" id="galleryGrid" aria-live="polite"></div>
+        </div>
+        <div class="tab-panel" id="videosPanel" role="tabpanel" hidden>
+          <div class="video-gallery" id="videoGrid"></div>
+        </div>
       </section>
     </main>
 
@@ -77,7 +76,6 @@
       <img id="dialogImage" alt="" />
       <div class="dialog-caption">
         <h2 id="dialogTitle"></h2>
-        <p id="dialogDescription"></p>
       </div>
     </dialog>
 

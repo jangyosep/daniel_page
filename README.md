@@ -1,6 +1,6 @@
 # 우리 아이의 작은 앨범
 
-Daniel 사진 5장을 담은 귀여운 반응형 사진 앨범 사이트입니다. GitHub Pages에 올리면 휴대폰에서도 주소로 볼 수 있습니다.
+Daniel 사진과 동영상을 담은 귀여운 반응형 앨범 사이트입니다. GitHub Pages에 올리면 휴대폰에서도 주소로 볼 수 있습니다.
 
 ## 사진 넣는 방법
 
@@ -20,13 +20,10 @@ Daniel 사진 5장을 담은 귀여운 반응형 사진 앨범 사이트입니�
 
 사진을 더 추가하려면 같은 형식의 항목을 하나 더 복사해서 붙여 넣으면 됩니다.
 
-현재 등록된 사진은 아래 파일입니다.
+현재 등록된 미디어는 아래와 같습니다.
 
-- `images/daniel-01.jpg`
-- `images/daniel-02.jpg`
-- `images/daniel-03.jpg`
-- `images/daniel-04.jpg`
-- `images/daniel-05.jpg`
+- 사진: `images/daniel-01.jpg` ~ `images/daniel-28.jpg`
+- 동영상: `videos/daniel-video-01.mp4`
 
 ## GitHub Pages로 보기
 
